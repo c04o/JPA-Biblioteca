@@ -5,40 +5,58 @@ import jakarta.persistence.EntityTransaction;
 import java.util.List;
 
 public abstract class GenericDAO<T> {
-    protected EntityManager em;
-    private Class<T> entityClass;
+
+    protected final EntityManager em;
+    private final Class<T> entityClass;
 
     public GenericDAO(EntityManager em, Class<T> entityClass) {
         this.em = em;
         this.entityClass = entityClass;
     }
 
-    public void crear(T entidad) {
+    public T crear(T entidad) {
         EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        em.persist(entidad);
-        tx.commit();
+        try {
+            tx.begin();
+            em.persist(entidad);
+            tx.commit();
+            return entidad;
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        }
     }
 
     public T buscar(Object id) {
         return em.find(entityClass, id);
     }
 
-    public void actualizar(T entidad) {
+    public T actualizar(T entidad) {
         EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        em.merge(entidad);
-        tx.commit();
+        try {
+            tx.begin();
+            T managed = em.merge(entidad);
+            tx.commit();
+            return managed;
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        }
     }
 
     public void eliminar(Object id) {
         EntityTransaction tx = em.getTransaction();
-        tx.begin();
-        T entidad = em.find(entityClass, id);
-        if (entidad != null) {
-            em.remove(entidad);
+        try {
+            tx.begin();
+            T entidad = em.find(entityClass, id);
+            if (entidad != null) {
+                em.remove(entidad);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
         }
-        tx.commit();
     }
 
     public List<T> listarTodos() {
