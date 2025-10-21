@@ -1,4 +1,4 @@
-# Programación Orientada a Objetos
+# Programación Orientada a Objetos 2.0 despues del pull
 
 ## Documentacion
 
@@ -6,7 +6,7 @@
 
 ### Miembros:
 - Julio Cesar Salamanca Ortiz
-- Julio Cesar Méndez Sandigo
+- Julio Cesar Méndez Sandigos
 - Nicolás Rafael Laguna Vallejos
 - Farid Eduardo Zuñiga Rico
 - Roderick Uziel Caldera Torrez
